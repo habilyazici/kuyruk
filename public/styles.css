@@ -177,6 +177,13 @@ button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus
 }
 .addrow svg { width: 18px; height: 18px; }
 .addrow[aria-disabled="true"] { opacity: .5; }
+.reset {
+  appearance: none; align-self: center; height: 44px; padding: 0 14px; border: 0; border-radius: 10px; background: transparent;
+  display: inline-flex; align-items: center; gap: 8px; font-weight: 600; color: var(--muted); cursor: pointer; touch-action: manipulation;
+}
+.reset svg { width: 18px; height: 18px; }
+.reset:active { background: var(--bg); }
+.reset[aria-disabled="true"] { opacity: .5; }
 .seg { display: inline-flex; border: 1.5px solid var(--line); border-radius: 999px; overflow: hidden; }
 .segb { appearance: none; border: 0; background: transparent; color: var(--muted); padding: 6px 11px; font-size: 13px; font-weight: 600; cursor: pointer; touch-action: manipulation; }
 .segb[aria-pressed="true"] { background: var(--go-soft); color: var(--ink); }

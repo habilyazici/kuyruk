@@ -452,7 +452,19 @@ function drawSettings() {
   $('addType').hidden = types.length >= MAX_TYPE;
   $('addStage').setAttribute('aria-disabled', lk ? 'true' : 'false');
   $('addType').setAttribute('aria-disabled', lk ? 'true' : 'false');
+  $('btnReset').setAttribute('aria-disabled', lk ? 'true' : 'false');
   $('lockNote').hidden = !lk;
+}
+/* Ayarlar ilk hâlinde mi: tek adsız aşama, otomatik, bir görevli, FIFO; tip ve sütun değişikliği yok. */
+function cfgIsDefault() {
+  var g = st.cfg, s = g.stages[0];
+  return g.stages.length === 1 && !(s.name || '').trim() && s.auto !== false && (s.k || 1) === 1 && (s.d || 'f') === 'f' &&
+    !g.types.length && !Object.keys(g.cols).length && !Object.keys(g.vis).length;
+}
+function resetTap() {
+  if (st.c.length) { toast('Önce kayıtları sil'); return; }
+  if (cfgIsDefault()) { toast('Ayarlar zaten ilk hâlinde'); return; }
+  ask('Ayarlar ilk hâline dönsün mü?', function () { st.cfg = fresh().cfg; save(); drawSettings(); toast('Ayarlar sıfırlandı'); }, { yes: 'Sıfırla' });
 }
 function focusLast(listId) { var i = $(listId).querySelectorAll('input[type="text"]'); if (i.length) i[i.length - 1].focus(); }
 
@@ -607,6 +619,7 @@ $('addType').addEventListener('click', function () {
   if (st.cfg.types.length >= MAX_TYPE) return;
   st.cfg.types.push({ id: rid('t'), name: '', skip: [] }); save(); drawSettings(); focusLast('typeList');
 });
+$('btnReset').addEventListener('click', resetTap);
 $('scrim').addEventListener('click', function (e) { if (e.target === $('scrim')) closeSheet(); });
 document.addEventListener('pointerdown', function (e) {
   if (!$('menu').hidden && !e.target.closest('#menu') && !e.target.closest('#btnMenu')) closeMenu();
