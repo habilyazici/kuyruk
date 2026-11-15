@@ -17,7 +17,7 @@ function rid(p) { return p + Date.now().toString(36) + Math.random().toString(36
    ayar:    { stages: [{ id, name, auto, k: görevli }], types: [{ id, name, skip: [geçmediği aşamalar] }], cols: { anahtar: ad } }
    geri al: her işlem bir adım listesi ([{ o: add|s|e|p|x, id }]); geri alınırken tersten çözülür. */
 /* m: bu cihazdaki son değişiklik anı; sy: hesaba en son yazılan sürümün anı; su: o hesabın kimliği. */
-function fresh() { return { c: [], u: [], d: false, m: 0, sy: 0, su: '', cfg: { stages: [{ id: 's1', name: '', auto: true, k: 1 }], types: [], cols: {}, vis: {} } }; }
+function fresh() { return { c: [], u: [], m: 0, sy: 0, su: '', cfg: { stages: [{ id: 's1', name: '', auto: true, k: 1 }], types: [], cols: {}, vis: {} } }; }
 function okRecords(list) { return (Array.isArray(list) ? list : []).filter(function (c) { return c && Array.isArray(c.p) && c.p.length; }); }
 function readCfg(src, cfg) {
   if (!src || !Array.isArray(src.stages) || !src.stages.length) return;
@@ -33,7 +33,7 @@ function load() {
     var j = JSON.parse(localStorage.getItem(KEY));
     if (j && Array.isArray(j.c)) {
       s.c = okRecords(j.c);
-      s.u = (Array.isArray(j.u) ? j.u : []).filter(Array.isArray); s.d = !!j.d;
+      s.u = (Array.isArray(j.u) ? j.u : []).filter(Array.isArray);
       s.m = j.m || 0; s.sy = j.sy || 0; s.su = j.su || '';
       readCfg(j.cfg, s.cfg);
       return s;
@@ -141,7 +141,7 @@ function undo() {
   commit();
 }
 function wipe() { st.c = []; st.u = []; commit(); }
-function commit() { st.d = st.c.some(function (c) { return !c.x; }); save(); render(); }
+function commit() { save(); render(); }
 
 /* ---------- çizim ---------- */
 var boxes = [], tags = {}, firstPaint = true, doneVal = 0;
@@ -173,6 +173,7 @@ function addButton(typeId, label) {
 function buildFrame() {
   var z = $('zones'), stages = st.cfg.stages, multi = stages.length > 1;
   z.textContent = ''; boxes = []; tags = shortTags();
+  z.classList.toggle('tight', stages.length >= 3);
   if (!multi) {
     var a = zone('serve', 'Hizmette'), b = zone('wait', 'Sırada');
     z.appendChild(a.sec); z.appendChild(b.sec);
@@ -273,7 +274,6 @@ function render(noAnim) {
   if (!(prev && animate(prev))) $('doneN').textContent = done;
   $('btnUndo').disabled = !st.u.length;
   $('doneBox').classList.toggle('empty', !st.c.some(function (c) { return !c.x; }));
-  paintExport();
 }
 function tick() {
   var d = new Date(), now = d.getTime();
@@ -343,7 +343,7 @@ function exportData() {
       if (!navigator.canShare({ files: [file] })) file = null;
     }
     if (!file) { download(blob, filename); return; }
-    navigator.share({ files: [file] }).then(function () { exported('Paylaşıldı'); }, function (err) {
+    navigator.share({ files: [file] }).then(function () { toast('Paylaşıldı'); }, function (err) {
       if (err && err.name === 'AbortError') return;
       try { download(blob, filename); } catch (e) { showCopy(tb); }
     });
@@ -353,10 +353,8 @@ function download(blob, filename) {
   var url = URL.createObjectURL(blob), a = document.createElement('a');
   a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove();
   setTimeout(function () { URL.revokeObjectURL(url); }, 5000);
-  exported('İndirildi');
+  toast('İndirildi');
 }
-function exported(msg) { st.d = false; save(); paintExport(); toast(msg); }
-function paintExport() { $('btnExport').classList.toggle('dirty', !!st.d); }
 
 /* ---------- ayarlar ---------- */
 function field(value, placeholder, label) {
@@ -473,14 +471,14 @@ function closeSheet() {
   var wasSet = !$('paneSet').hidden;
   $('scrim').hidden = true;
   if (!wasSet) return;
-  var ops = []; settle(Date.now(), ops); if (ops.length) { pushUndo(ops); st.d = true; }
+  var ops = []; settle(Date.now(), ops); if (ops.length) pushUndo(ops);
   save(); buildFrame(); render(true);
 }
 function showCopy(tb) { $('copyBox').value = buildTsv(tb); openSheet('copy'); }
 function copyNow() {
   var box = $('copyBox');
   function manual() { box.focus(); box.select(); toast('Seçildi, kopyala'); }
-  try { navigator.clipboard.writeText(box.value).then(function () { exported('Kopyalandı'); }, manual); } catch (e) { manual(); }
+  try { navigator.clipboard.writeText(box.value).then(function () { toast('Kopyalandı'); }, manual); } catch (e) { manual(); }
 }
 /* Kısa onay penceresi (tarayıcının kendi penceresi yerine sayfa içi). */
 var askFn = null, askNoFn = null;
@@ -536,7 +534,7 @@ function push() {
 }
 function adopt(d, j) {
   st.c = okRecords(j.c); st.u = []; readCfg(j.cfg, st.cfg);
-  st.m = st.sy = d.t; st.d = st.c.some(function (c) { return !c.x; });
+  st.m = st.sy = d.t;
   persist(); buildFrame(); render(true); setSync('ok'); toast('Hesaptan yüklendi');
 }
 function pull(force) {

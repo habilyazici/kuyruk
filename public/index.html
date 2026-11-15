@@ -24,7 +24,7 @@
     </div>
     <nav class="tools" aria-label="Araçlar">
       <button class="tool exp" id="btnExport" type="button" aria-label="Excel'e aktar">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="M7.5 11L12 15.5 16.5 11"/><path d="M5 19.5h14"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="M7.5 11L12 15.5 16.5 11"/><path d="M5 19.5h14"/></svg>
       </button>
       <button class="tool" id="btnUndo" type="button" aria-label="Son işlemi geri al">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 7L4.5 11.5 9 16"/><path d="M5 11.5h9a5 5 0 0 1 0 10h-2"/></svg>
@@ -77,7 +77,7 @@
         <li><span class="k"><span class="mini on"></span></span><span>Dokun: hizmet bitti</span></li>
         <li><span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7h14"/><path d="M9 7V5h6v2"/><path d="M7 7l1 12h8l1-12"/></svg></span><span>Basılı tut: sil</span></li>
         <li><span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 7L4.5 11.5 9 16"/><path d="M5 11.5h9a5 5 0 0 1 0 10h-2"/></svg></span><span>Geri al</span></li>
-        <li><span class="k" style="color:var(--go)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="M7.5 11L12 15.5 16.5 11"/><path d="M5 19.5h14"/></svg></span><span>Excel'e aktar. Dolu yeşilse aktarılmamış kayıt var</span></li>
+        <li><span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="M7.5 11L12 15.5 16.5 11"/><path d="M5 19.5h14"/></svg></span><span>Excel'e aktar</span></li>
       </ul>
       <h3>Varsayımlar</h3>
       <ul class="notes">
@@ -86,6 +86,12 @@
         <li>Otomatikte görevli boşsa sıradaki kendiliğinden başlar. Sıra dışı dokunuşta onay sorulur.</li>
         <li>Günün ilk müşterisinde gelişler arası süre boştur.</li>
         <li id="storeNote">Kayıtlar otomatik kaydedilir, yalnızca bu cihazda durur.</li>
+      </ul>
+      <h3>Ayarlar</h3>
+      <ul class="notes">
+        <li>Aşama: müşterinin uğradığı durak (kasa, masa gibi).</li>
+        <li>Görevli sayısı: o aşamada aynı anda hizmet alabilen müşteri sayısı.</li>
+        <li>Müşteri tipi: her tip için ayrı bir düğme çıkar; hangi aşamalardan geçtiği seçilir.</li>
       </ul>
     </div>
 
