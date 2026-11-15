@@ -38,7 +38,7 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="3.3"/><path d="M5.5 19.5c.8-3.5 3.4-5.2 6.5-5.2s5.7 1.7 6.5 5.2"/></svg>
         <span>Giriş yap</span>
       </button>
-      <button class="mi two" id="miAccount" type="button" role="menuitem" hidden>
+      <button class="mi two acct" id="miAccount" type="button" role="menuitem" hidden>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 5H6v14h4"/><path d="M14 8l4 4-4 4"/><path d="M18 12H10"/></svg>
         <span><span>Çıkış yap</span><small id="accInfo"></small></span>
       </button>
@@ -91,7 +91,15 @@
       <ul class="notes">
         <li>Aşama: müşterinin uğradığı durak (kasa, masa gibi).</li>
         <li>Görevli sayısı: o aşamada aynı anda hizmet alabilen müşteri sayısı.</li>
+        <li>Sıra kuralı: FIFO'da ilk gelen, LIFO'da son gelen önce alınır; Serbest'te sen seçersin.</li>
         <li>Müşteri tipi: her tip için ayrı bir düğme çıkar; hangi aşamalardan geçtiği seçilir.</li>
+        <li>Excel sütunları: hangi sütunların çıkacağı ve adları seçilir.</li>
+      </ul>
+      <h3>Kuyruk yapıları</h3>
+      <ul class="notes">
+        <li>Tek sıra, birden çok görevli: görevli sayısını artır.</li>
+        <li>Arka arkaya (seri) kuyruk: aşama ekle.</li>
+        <li>Yan yana ayrı sıralar: her sıraya bir aşama ve yalnızca o aşamadan geçen bir tip.</li>
       </ul>
     </div>
 

@@ -515,6 +515,10 @@ function setSync(s) { syncState = s; paintAccount(); }
 function paintAccount() {
   $('miLogin').hidden = !FBC || !!user; $('miAccount').hidden = !user;
   if (user) $('accInfo').textContent = user.email + ({ ok: ' · eşitlendi', busy: ' · eşitleniyor', err: ' · eşitlenemedi' }[syncState] || '');
+  /* menü düğmesi: giriş yapıldıysa yeşil çerçeve, eşitlenemediyse kırmızı */
+  var mb = $('btnMenu');
+  mb.classList.toggle('on', !!user); mb.classList.toggle('err', !!user && syncState === 'err');
+  mb.setAttribute('aria-label', user ? 'Menü, giriş yapıldı' : 'Menü');
 }
 function queuePush() {
   if (!user) return;

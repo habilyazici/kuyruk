@@ -58,6 +58,8 @@ button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus
 .tool:active { background: var(--go-soft); }
 .tool[disabled] { opacity: .4; cursor: default; }
 .tool.exp { margin-right: 14px; }
+.tool.on { border-color: var(--go); }
+.tool.on.err { border-color: var(--danger); }
 
 /* Menü */
 .menu {
@@ -73,6 +75,9 @@ button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus
 .mi:hover, .mi:active { background: var(--bg); }
 .mi.two { height: auto; padding-block: 9px; }
 .mi small { display: block; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; font-weight: 500; color: var(--muted); }
+.mi.acct, .mi.acct:hover, .mi.acct:active { background: var(--go-soft); }
+.mi.acct svg { color: var(--go); }
+.mi.acct small { color: var(--ink); opacity: .72; }
 .mi.danger { color: var(--danger); }
 .mi.sure, .mi.sure:hover { background: var(--danger); color: var(--surface); }
 .menu hr { border: 0; border-top: 1.5px solid var(--line); margin: 4px 6px; }
