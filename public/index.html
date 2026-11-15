@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kuyruk Kronometresi</title>
+<meta name="description" content="Kuyruk gözlemi için veri toplama aracı: geliş, hizmete başlama ve bitiş anlarını tek dokunuşla kaydeder, Excel'e aktarır.">
+<meta name="theme-color" content="#F2F4F1" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0F1213" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="app">
+  <header class="bar">
+    <div class="clock" id="clock" aria-label="Saat">--:--:--</div>
+    <div class="done" id="doneBox" aria-label="Bugün işi biten müşteri sayısı">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+      <span id="doneN">0</span>
+    </div>
+    <nav class="tools" aria-label="Araçlar">
+      <button class="tool exp" id="btnExport" type="button" aria-label="Excel'e aktar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="M7.5 11L12 15.5 16.5 11"/><path d="M5 19.5h14"/></svg>
+      </button>
+      <button class="tool" id="btnUndo" type="button" aria-label="Son işlemi geri al">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 7L4.5 11.5 9 16"/><path d="M5 11.5h9a5 5 0 0 1 0 10h-2"/></svg>
+      </button>
+      <button class="tool" id="btnMenu" type="button" aria-label="Menü" aria-haspopup="menu" aria-expanded="false" aria-controls="menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 7h14"/><path d="M5 12h14"/><path d="M5 17h14"/></svg>
+      </button>
+    </nav>
+    <div class="menu" id="menu" role="menu" hidden>
+      <button class="mi" id="miLogin" type="button" role="menuitem" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="3.3"/><path d="M5.5 19.5c.8-3.5 3.4-5.2 6.5-5.2s5.7 1.7 6.5 5.2"/></svg>
+        <span>Giriş yap</span>
+      </button>
+      <button class="mi two" id="miAccount" type="button" role="menuitem" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 5H6v14h4"/><path d="M14 8l4 4-4 4"/><path d="M18 12H10"/></svg>
+        <span><span>Çıkış yap</span><small id="accInfo"></small></span>
+      </button>
+      <button class="mi" id="miSet" type="button" role="menuitem">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h10"/><path d="M18 7h2"/><circle cx="16" cy="7" r="2"/><path d="M4 17h2"/><path d="M10 17h10"/><circle cx="8" cy="17" r="2"/></svg>
+        <span>Ayarlar</span>
+      </button>
+      <button class="mi" id="miInfo" type="button" role="menuitem">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v6"/><path d="M12 16.6v.1"/></svg>
+        <span>Bilgi</span>
+      </button>
+      <hr>
+      <button class="mi danger" id="miWipe" type="button" role="menuitem">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7h14"/><path d="M9 7V5h6v2"/><path d="M7 7l1 12h8l1-12"/></svg>
+        <span id="wipeLabel">Kayıtları sil</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="zones" id="zones"></main>
+  <footer class="dock" id="dock"></footer>
+</div>
+
+<div class="scrim" id="scrim" hidden>
+  <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Bilgi">
+    <div class="sheet-top">
+      <button class="tool" id="btnClose" type="button" aria-label="Kapat">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12"/><path d="M18 6L6 18"/></svg>
+      </button>
+    </div>
+
+    <div class="stack" id="paneInfo">
+      <ul class="how">
+        <li><span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14"/><path d="M5 12h14"/></svg></span><span>Müşteri geldi</span></li>
+        <li><span class="k"><span class="mini"></span></span><span>Dokun: hizmet başladı</span></li>
+        <li><span class="k"><span class="mini on"></span></span><span>Dokun: hizmet bitti</span></li>
+        <li><span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7h14"/><path d="M9 7V5h6v2"/><path d="M7 7l1 12h8l1-12"/></svg></span><span>Basılı tut: sil</span></li>
+        <li><span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 7L4.5 11.5 9 16"/><path d="M5 11.5h9a5 5 0 0 1 0 10h-2"/></svg></span><span>Geri al</span></li>
+        <li><span class="k" style="color:var(--go)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="M7.5 11L12 15.5 16.5 11"/><path d="M5 19.5h14"/></svg></span><span>Excel'e aktar. Dolu yeşilse aktarılmamış kayıt var</span></li>
+      </ul>
+      <h3>Varsayımlar</h3>
+      <ul class="notes">
+        <li>Saat bu cihazdan alınır, süreler dakikadır.</li>
+        <li>Bekleme = başlama − sıraya giriş. Hizmet = bitiş − başlama.</li>
+        <li>Otomatikte görevli boşsa sıradaki kendiliğinden başlar. Sıra dışı dokunuşta onay sorulur.</li>
+        <li>Günün ilk müşterisinde gelişler arası süre boştur.</li>
+        <li id="storeNote">Kayıtlar otomatik kaydedilir, yalnızca bu cihazda durur.</li>
+      </ul>
+    </div>
+
+    <div class="stack" id="paneSet" hidden>
+      <section class="blk" aria-labelledby="hStage">
+        <h3 id="hStage"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="5" cy="12" r="2.3"/><circle cx="12" cy="12" r="2.3"/><circle cx="19" cy="12" r="2.3"/><path d="M7.3 12h2.4"/><path d="M14.3 12h2.4"/></svg>Aşamalar</h3>
+        <div class="rows" id="stageList"></div>
+        <button class="addrow" id="addStage" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 6v12"/><path d="M6 12h12"/></svg>
+          <span>Aşama ekle</span>
+        </button>
+      </section>
+      <section class="blk" aria-labelledby="hType">
+        <h3 id="hType"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="3.3"/><path d="M5.5 19.5c.8-3.5 3.4-5.2 6.5-5.2s5.7 1.7 6.5 5.2"/></svg>Müşteri tipleri</h3>
+        <div class="rows" id="typeList"></div>
+        <button class="addrow" id="addType" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 6v12"/><path d="M6 12h12"/></svg>
+          <span>Tip ekle</span>
+        </button>
+      </section>
+      <details class="blk cols">
+        <summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="14" rx="2"/><path d="M4 10h16"/><path d="M10 5v14"/></svg>Excel sütunları</summary>
+        <div class="rows" id="colList"></div>
+      </details>
+      <p class="note" id="lockNote" hidden>Kayıt varken aşama ve tip eklenip silinmez. Önce aktar, sonra menüden kayıtları sil.</p>
+    </div>
+
+    <div class="stack" id="paneCopy" hidden>
+      <p style="margin:0">Dosya indirilemedi. Tabloyu kopyalayıp Excel'e ya da E-Tablolar'a yapıştır.</p>
+      <textarea class="copybox" id="copyBox" readonly aria-label="Kopyalanacak tablo"></textarea>
+      <button class="btn" id="btnCopy" type="button">Kopyala</button>
+    </div>
+  </div>
+</div>
+
+<div class="ask" id="ask" hidden>
+  <div class="askbox" role="alertdialog" aria-modal="true" aria-labelledby="askText">
+    <p id="askText"></p>
+    <div class="askbtns">
+      <button class="btn soft" id="askNo" type="button">Vazgeç</button>
+      <button class="btn" id="askYes" type="button">Evet</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

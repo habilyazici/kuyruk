@@ -1,0 +1,14 @@
+{
+  "name": "Kuyruk Kronometresi",
+  "short_name": "Kuyruk",
+  "description": "Kuyruk gözlemi için veri toplama aracı.",
+  "lang": "tr",
+  "start_url": ".",
+  "display": "browser",
+  "background_color": "#F2F4F1",
+  "theme_color": "#0E7A5F",
+  "icons": [
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}
