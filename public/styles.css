@@ -188,6 +188,7 @@ button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus
 }
 .tog[aria-pressed="true"] { background: var(--go-soft); border-color: var(--go); color: var(--ink); text-decoration: none; }
 .tog:disabled { opacity: .6; cursor: default; }
+.arr { color: var(--muted); font-size: 14px; line-height: 1; margin: 0 -4px; }
 .blk.cols { display: block; }
 .cols summary { cursor: pointer; list-style: none; min-height: 24px; }
 .cols summary::-webkit-details-marker { display: none; }

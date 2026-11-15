@@ -8,6 +8,7 @@ var KEY = 'kuyruk-kronometresi-v2', OLD_KEY = 'kuyruk-kronometresi-v1', MAX_STAG
 var $ = function (id) { return document.getElementById(id); };
 var IC_PLUS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14"/><path d="M5 12h14"/></svg>';
 var IC_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+var IC_UP = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V6"/><path d="M6.5 11.5L12 6l5.5 5.5"/></svg>';
 var IC_X ='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12"/><path d="M18 6L6 18"/></svg>';
 function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; }
 function rid(p) { return p + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
@@ -363,7 +364,7 @@ function field(value, placeholder, label) {
   i.addEventListener('keydown', function (e) { if (e.key === 'Enter') i.blur(); });
   return i;
 }
-function xButton(label, fn) { var b = el('button', 'x'); b.type = 'button'; b.innerHTML = IC_X; b.setAttribute('aria-label', label); b.addEventListener('click', fn); return b; }
+function xButton(label, fn, icon) { var b = el('button', 'x'); b.type = 'button'; b.innerHTML = icon || IC_X; b.setAttribute('aria-label', label); b.addEventListener('click', fn); return b; }
 function refreshNames() {
   var t = document.querySelectorAll('#typeList .tog'), i;
   for (i = 0; i < t.length; i++) t[i].textContent = stageName(Number(t[i].dataset.si));
@@ -378,6 +379,12 @@ function drawSettings() {
     inp.maxLength = 14;
     inp.addEventListener('input', function () { s.name = inp.value; save(); refreshNames(); });
     row.appendChild(inp);
+    /* Aşamaların sırası müşterinin geçiş sırasıdır; ok aşamayı bir üste alır. */
+    if (i > 0 && !lk) row.appendChild(xButton('Bir üste taşı', function () {
+      st.cfg.stages.splice(i - 1, 2, s, st.cfg.stages[i - 1]);
+      save(); drawSettings();
+      var again = $('stageList').children[i]; again = again && again.querySelector('.x'); if (again) again.focus();
+    }, IC_UP));
     if (multi && !lk) row.appendChild(xButton('Aşamayı sil', function () {
       st.cfg.stages.splice(i, 1);
       st.cfg.types.forEach(function (t) { t.skip = t.skip.filter(function (g) { return g !== s.id; }); if (t.skip.length >= st.cfg.stages.length) t.skip = []; });
@@ -414,6 +421,7 @@ function drawSettings() {
     if (multi) {
       var togs = el('div', 'togs'); togs.setAttribute('role', 'group'); togs.setAttribute('aria-label', 'Bu tipin geçtiği aşamalar');
       stages.forEach(function (s, j) {
+        if (j) { var ar = el('span', 'arr', '→'); ar.setAttribute('aria-hidden', 'true'); togs.appendChild(ar); }
         var on = t.skip.indexOf(s.id) < 0, b = el('button', 'tog', stageName(j));
         b.type = 'button'; b.disabled = lk; b.dataset.si = j; b.setAttribute('aria-pressed', on ? 'true' : 'false');
         b.addEventListener('click', function () {

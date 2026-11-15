@@ -8,7 +8,7 @@ Kuyruk gözlemi için veri toplama aracı. Müşterinin geliş, hizmete başlama
 
 - Kurulum yok; telefonda ya da bilgisayarda tarayıcıdan açılır.
 - Tek dokunuşla kayıt, geri alma ve yanlış kaydı silme.
-- En çok üç aşama ve dört müşteri tipi. Her aşamada görevli sayısı ve sıra kuralı (FIFO, LIFO, serbest) ayarlanır.
+- En çok üç aşama ve dört müşteri tipi. Aşamaların sırası, her aşamada görevli sayısı ve sıra kuralı (FIFO, LIFO, serbest) ayarlanır.
 - Excel çıktısı: geliş saati, gelişler arası süre, bekleme ve hizmet süreleri. Sütunlar seçilebilir ve yeniden adlandırılabilir.
 - Kayıtlar cihazda saklanır. İsteyen Google hesabıyla giriş yapar; kayıtları hesabında da durur ve başka cihazda açılır.
 
@@ -16,7 +16,7 @@ Kuyruk gözlemi için veri toplama aracı. Müşterinin geliş, hizmete başlama
 
 1. Müşteri gelince **+** düğmesine dokunun.
 2. Hizmet bitince hizmetteki karta dokunun; sıradaki müşteri kendiliğinden başlar.
-3. Gözlem bitince yeşil düğmeyle Excel dosyasını alın.
+3. Gözlem bitince üstteki aktar düğmesiyle Excel dosyasını alın.
 
 Ayarlar ve uygulamanın varsayımları menüdedir.
 
