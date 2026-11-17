@@ -666,7 +666,7 @@ document.addEventListener('visibilitychange', function () {
 buildFrame(); render(); tick(); setInterval(tick, 1000);
 paintAccount();
 if (FBC) {
-  $('storeNote').textContent = 'Kayıtlar otomatik kaydedilir. Giriş yaparsan hesabına da yazılır, başka cihazda geri gelir.';
+  $('storeNote').textContent = 'Kayıtlar otomatik kaydedilir; giriş yaparsan hesabında da durur.';
   var wasIn = null; try { wasIn = localStorage.getItem(AUTH_KEY); } catch (e) {}
   if (wasIn) loadFb().catch(function () {});
 }
